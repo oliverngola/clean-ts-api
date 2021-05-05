@@ -33,12 +33,6 @@ const makeFakeServerError = (): HttpResponse => {
   return serverError(fakeError)
 }
 
-interface SutTypes {
-  sut: LogControllerDecorator
-  controllerStub: Controller
-  logErrorRepositoryStub: LogErrorRepository
-}
-
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -55,6 +49,12 @@ const makeLogErrorRepository = (): LogErrorRepository => {
     }
   }
   return new LogErrorRepositoryStub()
+}
+
+interface SutTypes {
+  sut: LogControllerDecorator
+  controllerStub: Controller
+  logErrorRepositoryStub: LogErrorRepository
 }
 
 const makeSut = (): SutTypes => {

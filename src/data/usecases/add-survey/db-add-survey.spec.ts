@@ -4,11 +4,6 @@ import {
   AddSurveyRepository
 } from './db-add-survey-protocols'
 
-interface SutTypes {
-  sut: DbAddSurvey
-  addSurveyRespositoryStub: AddSurveyRepository
-}
-
 const makeAddSurveyRepository = (): any => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
     async add (surveyData: AddSurveyModel): Promise<void> {
@@ -28,6 +23,11 @@ const makeFakeAddSurveyData = (): AddSurveyModel => ({
     }
   ]
 })
+
+interface SutTypes {
+  sut: DbAddSurvey
+  addSurveyRespositoryStub: AddSurveyRepository
+}
 
 const makeSut = (): SutTypes => {
   const addSurveyRespositoryStub = makeAddSurveyRepository()
