@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/oliverngola/clean-ts-api.svg?branch=master)](https://travis-ci.com/oliverngola/clean-ts-api)
+[![Coverage Status](https://coveralls.io/repos/github/oliverngola/clean-ts-api/badge.svg)](https://coveralls.io/github/oliverngola/clean-ts-api)
+
 # **Clean Node API**
 
 [![alt text](./public/img/logo-course.png "Link para o treinamento")](https://www.udemy.com/course/tdd-com-mango/?referralCode=B53CE5CA2B9AFA5A6FA1)
