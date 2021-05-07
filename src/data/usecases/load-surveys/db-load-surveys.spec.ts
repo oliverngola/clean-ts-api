@@ -3,6 +3,7 @@ import {
   LoadSurveysRepository,
   SurveyModel
 } from './db-load-surveys-protocols'
+import Mockdate from 'mockdate'
 
 const makeFakeSurveys = (): SurveyModel[] => ([{
   id: 'any_id',
@@ -45,10 +46,24 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadSurveys UseCase', () => {
+  beforeAll(() => {
+    Mockdate.set(new Date())
+  })
+
+  afterAll(() => {
+    Mockdate.reset()
+  })
+
   test('Should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
     const loadAllSpy = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
     await sut.load()
     expect(loadAllSpy).toHaveBeenCalled()
+  })
+
+  test('Should return a list of Surveys on success', async () => {
+    const { sut } = makeSut()
+    const surveys = await sut.load()
+    expect(surveys).toEqual(makeFakeSurveys())
   })
 })
