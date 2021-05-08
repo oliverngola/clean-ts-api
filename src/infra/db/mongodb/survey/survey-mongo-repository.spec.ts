@@ -1,8 +1,27 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
+import { SurveyModel } from '../../../../domain/models/survey'
 import { Collection } from 'mongodb'
 
 let surveyCollection: Collection
+
+const makeFakeSurveys = (): SurveyModel[] => ([{
+  id: 'any_id',
+  question: 'any_question',
+  answers: [{
+    image: 'any_image',
+    answer: 'any_answer'
+  }],
+  date: new Date()
+},{
+  id: 'other_id',
+  question: 'other_question',
+  answers: [{
+    image: 'other_image',
+    answer: 'other_answer'
+  }],
+  date: new Date()
+}])
 
 const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
@@ -40,6 +59,17 @@ describe('Survey Mongo Repository', () => {
       })
       const survey = await surveyCollection.findOne({ question: 'any_question' })
       expect(survey).toBeTruthy()
+    })
+  })
+
+  describe('loadAll()', () => {
+    test('Should loadAll survey on success', async () => {
+      const sut = makeSut()
+      await surveyCollection.insertMany(makeFakeSurveys())
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(2)
+      expect(surveys[0].question).toBe('any_question')
+      expect(surveys[1].question).toBe('other_question')
     })
   })
 })
