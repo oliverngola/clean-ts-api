@@ -1,4 +1,4 @@
-import { Validation } from '../../presentation/protocols'
+import { Validation } from '@/presentation/protocols'
 
 export class ValidateComposite implements Validation {
   constructor (private readonly validations: Validation[]) {}

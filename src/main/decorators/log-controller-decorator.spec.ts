@@ -1,15 +1,15 @@
+import { LogControllerDecorator } from './log-controller-decorator'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '../../presentation/protocols'
+} from '@/presentation/protocols'
 import {
   serverError,
   ok
-} from '../../presentation/helpers/http/http-helpers'
-import { LogControllerDecorator } from './log-controller-decorator'
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
-import { AccountModel } from '../../domain/models/account'
+} from '@/presentation/helpers/http/http-helpers'
+import { AccountModel } from '@/domain/models/account'
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

@@ -1,7 +1,7 @@
 import {
   HttpRequest,
   Middleware
-} from '../../presentation/protocols'
+} from '@/presentation/protocols'
 import {
   Request,
   Response,

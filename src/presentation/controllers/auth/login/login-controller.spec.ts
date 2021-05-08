@@ -5,13 +5,13 @@ import {
   Validation,
   AuthenticationModel
 } from './login-controller-protocols'
-import { MissingParamError } from '../../../errors'
+import { MissingParamError } from '@/presentation/errors'
 import {
   badRequest,
   ok,
   serverError,
   unauthorized
-} from '../../../helpers/http/http-helpers'
+} from '@/presentation/helpers/http/http-helpers'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {

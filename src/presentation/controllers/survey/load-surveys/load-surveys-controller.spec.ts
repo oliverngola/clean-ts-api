@@ -7,7 +7,7 @@ import {
   notContent,
   ok,
   serverError
-} from '../../../helpers/http/http-helpers'
+} from '@/presentation/helpers/http/http-helpers'
 import Mockdate from 'mockdate'
 
 const makeFakeSurveys = (): SurveyModel[] => ([{

@@ -11,8 +11,8 @@ import {
   serverError,
   ok,
   forbidden
-} from '../../../helpers/http/http-helpers'
-import { EmailInUseError } from '../../../errors'
+} from '@/presentation/helpers/http/http-helpers'
+import { EmailInUseError } from '@/presentation/errors'
 
 export class SignUpController implements Controller {
   constructor (

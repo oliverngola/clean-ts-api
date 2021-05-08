@@ -9,7 +9,7 @@ import {
   badRequest,
   notContent,
   serverError
-} from '../../../helpers/http/http-helpers'
+} from '@/presentation/helpers/http/http-helpers'
 
 export class AddSurveyController implements Controller {
   constructor (
