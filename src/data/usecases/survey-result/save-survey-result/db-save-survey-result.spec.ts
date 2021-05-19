@@ -1,14 +1,14 @@
 import { DbSaveSurveyResult } from './db-save-survey-result'
 import {
   SurveyResultModel,
-  SaveSurveyResultModel,
+  SaveSurveyResultParams,
   SaveSurveyResultRepository
 } from './db-save-survey-result-protocols'
 import Mockdate from 'mockdate'
 
 const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
+    async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
       return new Promise(resolve => resolve(makeFakeSurveyResult()))
     }
   }
@@ -16,7 +16,7 @@ const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
   return new SaveSurveyResultRepositoryStub()
 }
 
-const makeFakeSurveyResultData = (): SaveSurveyResultModel => ({
+const makeFakeSurveyResultData = (): SaveSurveyResultParams => ({
   accountId: 'any_account_id',
   surveyId: 'any_survey_id',
   answer: 'any_answer',

@@ -3,7 +3,7 @@ import {
   HttpRequest,
   Authentication,
   Validation,
-  AuthenticationModel
+  AuthenticationParams
 } from './login-controller-protocols'
 import { MissingParamError } from '@/presentation/errors'
 import {
@@ -15,7 +15,7 @@ import {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return 'any_token'
     }
   }

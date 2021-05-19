@@ -1,11 +1,11 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
+import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { Collection } from 'mongodb'
 
 let surveyCollection: Collection
 
-const makeFakeSurveys = (): AddSurveyModel[] => ([{
+const makeFakeSurveys = (): AddSurveyParams[] => ([{
   question: 'any_question',
   answers: [{
     image: 'any_image',
