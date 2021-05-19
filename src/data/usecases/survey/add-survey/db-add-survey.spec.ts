@@ -1,30 +1,13 @@
 import { DbAddSurvey } from './db-add-survey'
 import {
-  AddSurveyParams,
   AddSurveyRepository
 } from './db-add-survey-protocols'
+import {
+  mockAddSurveyParams,
+  throwError
+} from '@/domain/test'
 import Mockdate from 'mockdate'
-
-const makeAddSurveyRepository = (): any => {
-  class AddSurveyRepositoryStub implements AddSurveyRepository {
-    async add (surveyData: AddSurveyParams): Promise<void> {
-      return new Promise(resolve => resolve())
-    }
-  }
-
-  return new AddSurveyRepositoryStub()
-}
-
-const makeFakeAddSurveyData = (): AddSurveyParams => ({
-  question: 'any_question',
-  answers: [
-    {
-      image: 'any_image',
-      answer: 'any_answer'
-    }
-  ],
-  date: new Date()
-})
+import { mockAddSurveyRepository } from '@/data/test'
 
 type SutTypes = {
   sut: DbAddSurvey
@@ -32,7 +15,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const addSurveyRespositoryStub = makeAddSurveyRepository()
+  const addSurveyRespositoryStub = mockAddSurveyRepository()
   const sut = new DbAddSurvey(addSurveyRespositoryStub)
   return { sut, addSurveyRespositoryStub }
 }
@@ -49,14 +32,14 @@ describe('DbAddSurvey UseCase', () => {
   test('Should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRespositoryStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyRespositoryStub, 'add')
-    await sut.add(makeFakeAddSurveyData())
-    expect(addSpy).toHaveBeenCalledWith(makeFakeAddSurveyData())
+    await sut.add(mockAddSurveyParams())
+    expect(addSpy).toHaveBeenCalledWith(mockAddSurveyParams())
   })
 
   test('should throw if AddSurveyRepository throws', async () => {
     const { sut, addSurveyRespositoryStub } = makeSut()
-    jest.spyOn(addSurveyRespositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.add(makeFakeAddSurveyData())
+    jest.spyOn(addSurveyRespositoryStub, 'add').mockImplementationOnce(throwError)
+    const promise = sut.add(mockAddSurveyParams())
     await expect(promise).rejects.toThrow()
   })
 })

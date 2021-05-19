@@ -1,30 +1,19 @@
+import { DbAddAccount } from './db-add-account'
 import {
-  AddAccountParams,
   AccountModel,
   Hasher,
   AddAccountRepository,
   LoadAccountByEmailRepository
 } from './db-add-account-protocols'
-import { DbAddAccount } from './db-add-account'
-
-const makeHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return new Promise(resolve => resolve('hashed_password'))
-    }
-  }
-  return new HasherStub()
-}
-
-const makeAddAccountRepository = (): AddAccountRepository => {
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (accountData: AddAccountParams): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
-    }
-  }
-
-  return new AddAccountRepositoryStub()
-}
+import {
+  mockAccountModel,
+  mockAddAccountParams,
+  throwError
+} from '@/domain/test'
+import {
+  mockAddAccountRepository,
+  mockHasher
+} from '@/data/test'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
@@ -35,19 +24,6 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@email.com',
-  password: 'hashed_password'
-})
-
-const makeFakeAccountData = (): AddAccountParams => ({
-  name: 'valid_name',
-  email: 'valid_email@email.com',
-  password: 'valid_password'
-})
-
 type SutTypes = {
   sut: DbAddAccount
   hasherStub: Hasher
@@ -56,8 +32,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const addAccountRespositoryStub = makeAddAccountRepository()
-  const hasherStub = makeHasher()
+  const addAccountRespositoryStub = mockAddAccountRepository()
+  const hasherStub = mockHasher()
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
   const sut = new DbAddAccount(hasherStub, addAccountRespositoryStub, loadAccountByEmailRepositoryStub)
   return {
@@ -72,52 +48,52 @@ describe('DbAddAccount Usecase', () => {
   test('should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hasherSpy = jest.spyOn(hasherStub, 'hash')
-    await sut.add(makeFakeAccountData())
-    expect(hasherSpy).toHaveBeenCalledWith('valid_password')
+    await sut.add(mockAddAccountParams())
+    expect(hasherSpy).toHaveBeenCalledWith('any_password')
   })
 
   test('should throw if Hasher throws', async () => {
     const { sut, hasherStub } = makeSut()
-    jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.add(makeFakeAccountData())
+    jest.spyOn(hasherStub, 'hash').mockImplementationOnce(throwError)
+    const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRespositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRespositoryStub, 'add')
-    await sut.add(makeFakeAccountData())
+    await sut.add(mockAddAccountParams())
     expect(addSpy).toHaveBeenCalledWith({
-      name: 'valid_name',
-      email: 'valid_email@email.com',
+      name: 'any_name',
+      email: 'any_email@email.com',
       password: 'hashed_password'
     })
   })
 
   test('should throw if AddAccountRespository throws', async () => {
     const { sut, addAccountRespositoryStub } = makeSut()
-    jest.spyOn(addAccountRespositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.add(makeFakeAccountData())
+    jest.spyOn(addAccountRespositoryStub, 'add').mockImplementationOnce(throwError)
+    const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('should return null if LoadAccountByEmailRepository not return null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise(resolve => resolve(makeFakeAccount())))
-    const account = await sut.add(makeFakeAccountData())
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise(resolve => resolve(mockAccountModel())))
+    const account = await sut.add(mockAddAccountParams())
     expect(account).toBeNull()
   })
 
   test('should return an account on success', async () => {
     const { sut } = makeSut()
-    const account = await sut.add(makeFakeAccountData())
-    expect(account).toEqual(makeFakeAccount())
+    const account = await sut.add(mockAddAccountParams())
+    expect(account).toEqual(mockAccountModel())
   })
 
   test('Should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-    await sut.add(makeFakeAccountData())
-    expect(loadSpy).toBeCalledWith('valid_email@email.com')
+    await sut.add(mockAddAccountParams())
+    expect(loadSpy).toBeCalledWith('any_email@email.com')
   })
 })
