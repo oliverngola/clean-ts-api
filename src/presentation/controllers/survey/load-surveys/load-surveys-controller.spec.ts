@@ -6,7 +6,10 @@ import {
   serverError
 } from '@/presentation/helpers/http/http-helpers'
 import { mockLoadSurveys } from '@/presentation/test'
-import { mockSurveyModels } from '@/domain/test'
+import {
+  mockSurveyModels,
+  throwError
+} from '@/domain/test'
 import Mockdate from 'mockdate'
 
 type SutTypes = {
@@ -46,14 +49,14 @@ describe('LoadSurveys Controller', () => {
 
   test('Should return 204 if LoadSurveys returns empty', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    jest.spyOn(loadSurveysStub, 'load').mockResolvedValueOnce(new Promise((resolve) => resolve([])))
+    jest.spyOn(loadSurveysStub, 'load').mockResolvedValueOnce(Promise.resolve([]))
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(notContent())
   })
 
   describe('Should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    jest.spyOn(loadSurveysStub, 'load').mockResolvedValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(serverError(new Error()))
   })
