@@ -5,7 +5,8 @@ import {
   errorSchema,
   surveySchema,
   surveyAnswerSchema,
-  surveysSchema
+  surveysSchema,
+  addSurveyParamsSchema
 } from './schemas/'
 
 export default {
@@ -15,5 +16,6 @@ export default {
   error: errorSchema,
   survey: surveySchema,
   surveyAnswer: surveyAnswerSchema,
-  surveys: surveysSchema
+  surveys: surveysSchema,
+  addSurveyParams: addSurveyParamsSchema
 }
