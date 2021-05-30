@@ -1,11 +1,13 @@
 import {
   loginPath,
   signUpPath,
-  surveyPath
+  surveyPath,
+  surveyResultPath
 } from './paths/'
 
 export default {
   '/login': loginPath,
   '/signup': signUpPath,
-  '/surveys': surveyPath
+  '/surveys': surveyPath,
+  '/surveys/{surveyId}/results': surveyResultPath
 }
