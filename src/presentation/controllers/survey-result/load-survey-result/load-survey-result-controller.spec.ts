@@ -4,6 +4,8 @@ import {
   LoadSurveyById
 } from './load-survey-result-controller-protocols'
 import { mockLoadSurveyById } from '@/presentation/test'
+import { forbidden } from '@/presentation/helpers/http/http-helpers'
+import { InvalidParamError } from '@/presentation/errors'
 
 const makeFakeRequest = (): HttpRequest => ({
   params: {
@@ -28,5 +30,12 @@ describe('LoadSurveyResult Controller', () => {
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
     await sut.handle(makeFakeRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should return 403 if LoadSurveyById return null', async () => {
+    const { sut, loadSurveyByIdStub } = makeSut()
+    jest.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValueOnce(Promise.resolve(null))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
 })
