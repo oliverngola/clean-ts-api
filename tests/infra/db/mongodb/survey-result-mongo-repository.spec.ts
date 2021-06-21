@@ -1,34 +1,19 @@
 import { MongoHelper, SurveyResultMongoRepository } from '@/infra/db'
 import { SurveyModel, AccountModel } from '@/domain/models'
 import { Collection, ObjectId } from 'mongodb'
+import { mockAddAccountParams, mockAddSurveyParams } from '@/tests/domain/mocks'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
 let accountCollection: Collection
 
 const makeSurvey = async (): Promise<SurveyModel> => {
-  const res = await surveyCollection.insertOne({
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer_1'
-    }, {
-      image: 'other_image',
-      answer: 'any_answer_2'
-    },{
-      answer: 'any_answer_3'
-    }],
-    date: new Date()
-  })
+  const res = await surveyCollection.insertOne(mockAddSurveyParams())
   return MongoHelper.map(res.ops[0])
 }
 
 const makeAccount = async (): Promise<AccountModel> => {
-  const res = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@email.com',
-    password: 'any_password'
-  })
+  const res = await accountCollection.insertOne(mockAddAccountParams())
   return MongoHelper.map(res.ops[0])
 }
 
@@ -113,27 +98,15 @@ describe('Survey Result Mongo Repository', () => {
         accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date()
-      },{
-        surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
-        answer: survey.answers[1].answer,
-        date: new Date()
-      },{
-        surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
-        answer: survey.answers[1].answer,
-        date: new Date()
       }])
       const sut = makeSut()
       const surveyResult = await sut.loadBySurveyId(survey.id)
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.surveyId).toEqual(survey.id)
       expect(surveyResult.answers[0].count).toBe(2)
-      expect(surveyResult.answers[0].percent).toBe(50)
-      expect(surveyResult.answers[1].count).toBe(2)
-      expect(surveyResult.answers[1].percent).toBe(50)
-      expect(surveyResult.answers[2].count).toBe(0)
-      expect(surveyResult.answers[2].percent).toBe(0)
+      expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
 
     test('Should return null if there is no survey result', async () => {

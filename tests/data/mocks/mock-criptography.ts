@@ -1,37 +1,44 @@
 import { Encrypter, Decrypter, Hasher,HashComparer } from '@/data/protocols'
+import faker from 'faker'
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (id: string): Promise<string> {
-      return 'any_token'
-    }
+export class EncrypterSpy implements Encrypter {
+  ciphertext = faker.datatype.uuid()
+  plaintext: string
+
+  async encrypt (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return this.ciphertext
   }
-  return new EncrypterStub()
 }
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (token: string): Promise<string> {
-      return Promise.resolve('any_value')
-    }
+export class DecrypterSpy implements Decrypter {
+  plaintext = faker.internet.password()
+  ciphertext: string
+
+  async decrypt (ciphertext: string): Promise<string> {
+    this.ciphertext = ciphertext
+    return Promise.resolve(this.plaintext)
   }
-  return new DecrypterStub()
 }
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return Promise.resolve('hashed_password')
-    }
+export class HasherSpy implements Hasher {
+  digest = faker.datatype.uuid()
+  plaintext: string
+
+  async hash (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return Promise.resolve(this.digest)
   }
-  return new HasherStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return Promise.resolve(true)
-    }
+export class HashComparerSpy implements HashComparer {
+  isValid = true
+  plaintext: string
+  digest: string
+
+  async compare (plaintext: string, digest: string): Promise<boolean> {
+    this.plaintext = plaintext
+    this.digest = digest
+    return Promise.resolve(this.isValid)
   }
-  return new HashComparerStub()
 }

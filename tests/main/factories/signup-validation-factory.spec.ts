@@ -6,18 +6,9 @@ import {
   RequiredFieldValidation,
   CompareFieldsValidation
 } from '@/validation/validators'
-import { EmailValidator } from '@/validation/protocols'
+import { EmailValidatorAdapter } from '@/infra/validators'
 
 jest.mock('@/validation/validators/validation-composite')
-
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-  return new EmailValidatorStub()
-}
 
 describe('SigunUpValidation Factory', () => {
   test('Should call ValidationComposite with all validations', () => {
@@ -27,7 +18,7 @@ describe('SigunUpValidation Factory', () => {
       validations.push(new RequiredFieldValidation(field))
     }
     validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
-    validations.push(new EmailValidation('email', makeEmailValidator()))
+    validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
     expect(ValidateComposite).toHaveBeenCalledWith(validations)
   })
 })
