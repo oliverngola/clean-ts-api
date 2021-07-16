@@ -1,19 +1,14 @@
 import { throwError } from '@/tests/domain/mocks'
 import { LoadSurveyByIdSpy, SaveSurveyResultSpy } from '@/tests/presentation/mocks'
 import { SaveSurveyResultController } from '@/presentation/controllers'
-import { HttpRequest } from '@/presentation/protocols'
 import { forbidden, ok, serverError } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 import MockDate from 'mockdate'
 import faker from 'faker'
 
-const mockRequest = (answer: string = null): HttpRequest => ({
-  params: {
-    surveyId: faker.datatype.uuid()
-  },
-  body: {
-    answer
-  },
+const mockRequest = (answer: string = null): SaveSurveyResultController.Request => ({
+  surveyId: faker.datatype.uuid(),
+  answer,
   accountId: faker.datatype.uuid()
 })
 
@@ -45,9 +40,9 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should call LoadSurveyById with correct values', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadSurveyByIdSpy.id).toBe(httpRequest.params.surveyId)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadSurveyByIdSpy.id).toBe(request.surveyId)
   })
 
   test('Should return 403 if LoadSurveyById return null', async () => {
@@ -72,12 +67,12 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should call SaveSurveyResult with correct values', async () => {
     const { sut, saveSurveyResultSpy, loadSurveyByIdSpy } = makeSut()
-    const httpRequest = mockRequest(loadSurveyByIdSpy.surveyModel.answers[0].answer)
-    await sut.handle(httpRequest)
+    const request = mockRequest(loadSurveyByIdSpy.surveyModel.answers[0].answer)
+    await sut.handle(request)
     expect(saveSurveyResultSpy.saveSurveyResultParams).toEqual({
-      surveyId: httpRequest.params.surveyId,
-      accountId: httpRequest.accountId,
-      answer: httpRequest.body.answer,
+      surveyId: request.surveyId,
+      accountId: request.accountId,
+      answer: request.answer,
       date: new Date()
     })
   })

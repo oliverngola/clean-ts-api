@@ -1,15 +1,12 @@
 import { LoadAccountByTokenSpy } from '@/tests/presentation/mocks'
 import { throwError } from '@/tests/domain/mocks'
-import { HttpRequest } from '@/presentation/protocols'
 import { AuthMiddleware } from '@/presentation/middlewares'
 import { forbidden, ok, serverError } from '@/presentation/helpers'
 import { AccessDeniedError } from '@/presentation/errors'
 import faker from 'faker'
 
-const mockRequest = (): HttpRequest => ({
-  headers: {
-    'x-access-token': faker.datatype.uuid()
-  }
+const mockRequest = (): AuthMiddleware.Request => ({
+  accessToken: faker.datatype.uuid()
 })
 
 type SutTypes = {
@@ -33,9 +30,9 @@ describe('Auth Middleware', () => {
   test('Should call LoadAccountByToken with correct accessToken', async () => {
     const role = faker.random.word()
     const { sut, loadAccountByTokenSpy } = makeSut(role)
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadAccountByTokenSpy.accessToken).toBe(httpRequest.headers['x-access-token'])
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadAccountByTokenSpy.accessToken).toBe(request.accessToken)
   })
 
   test('Should return 403 if LoadAccountByToken returns null', async () => {
