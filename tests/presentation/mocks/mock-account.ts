@@ -2,7 +2,6 @@ import { mockAccountModel } from '@/tests/domain/mocks'
 import { AccountModel, AuthenticationModel } from '@/domain/models'
 import {
   AddAccount,
-  AddAccountParams,
   Authentication,
   AuthenticationParams,
   LoadAccountByToken
@@ -10,12 +9,12 @@ import {
 import faker from 'faker'
 
 export class AddAccountSpy implements AddAccount {
-  accountModel = mockAccountModel()
-  addAccountParams: AddAccountParams
+  isValid = true
+  addAccountParams: AddAccount.Params
 
-  async add (account: AddAccountParams): Promise<AccountModel> {
+  async add (account: AddAccount.Params): Promise<AddAccount.Result> {
     this.addAccountParams = account
-    return Promise.resolve(this.accountModel)
+    return this.isValid
   }
 }
 
@@ -28,7 +27,7 @@ export class AuthenticationSpy implements Authentication {
 
   async auth (authentication: AuthenticationParams): Promise<AuthenticationModel> {
     this.authenticationParams = authentication
-    return Promise.resolve(this.authenticationModel)
+    return this.authenticationModel
   }
 }
 
@@ -40,6 +39,6 @@ export class LoadAccountByTokenSpy implements LoadAccountByToken {
   async load (accessToken: string, role?: string): Promise<AccountModel> {
     this.accessToken = accessToken
     this.role = role
-    return Promise.resolve(this.accountModel)
+    return this.accountModel
   }
 }
