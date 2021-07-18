@@ -1,5 +1,6 @@
 import {
   AddAccountRepository,
+  CheckAccountByEmailRepository,
   LoadAccountByEmailRepository,
   LoadAccountByTokenRepository,
   UpdateAccessTokenRepository
@@ -31,11 +32,18 @@ export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailReposi
   }
 }
 
-export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
-  result = {
-    id: faker.datatype.uuid()
-  }
+export class CheckAccountByEmailRepositorySpy implements CheckAccountByEmailRepository {
+  result = false
+  email: string
 
+  async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+    this.email = email
+    return Promise.resolve(this.result)
+  }
+}
+
+export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
+  result = { id: faker.datatype.uuid() }
   token: string
   role: string
 
