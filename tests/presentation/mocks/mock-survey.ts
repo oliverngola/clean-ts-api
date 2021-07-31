@@ -36,11 +36,11 @@ export class CheckSurveyByIdSpy implements CheckSurveyById {
 }
 
 export class LoadSurveysSpy implements LoadSurveys {
-  surveyModels = mockSurveyModels()
+  result = mockSurveyModels()
   accountId: string
 
   async load (accountId: string): Promise<LoadSurveys.Result> {
     this.accountId = accountId
-    return Promise.resolve(this.surveyModels)
+    return Promise.resolve(this.result)
   }
 }

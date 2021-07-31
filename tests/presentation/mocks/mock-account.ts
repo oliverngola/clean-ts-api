@@ -13,14 +13,14 @@ export class AddAccountSpy implements AddAccount {
 
 export class AuthenticationSpy implements Authentication {
   authenticationParams: Authentication.Params
-  authenticationModel = {
+  result = {
     accessToken: faker.datatype.uuid(),
     name: faker.name.findName()
   }
 
   async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
     this.authenticationParams = authentication
-    return this.authenticationModel
+    return this.result
   }
 }
 
