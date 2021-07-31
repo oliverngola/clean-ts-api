@@ -29,13 +29,13 @@ describe('DbCheckSurveyById Usecase', () => {
     expect(checkSurveyByIdRepositorySpy.id).toBe(surveyId)
   })
 
-  test('Should return true if CheckSurveyByIdRepositorySpy returns true', async () => {
+  test('Should return true if CheckSurveyByIdRepository returns true', async () => {
     const { sut } = makeSut()
     const exists = await sut.checkById(surveyId)
     expect(exists).toBe(true)
   })
 
-  test('Should return false if CheckSurveyByIdRepositorySpy returns false', async () => {
+  test('Should return false if CheckSurveyByIdRepository returns false', async () => {
     const { sut, checkSurveyByIdRepositorySpy } = makeSut()
     checkSurveyByIdRepositorySpy.result = false
     const exists = await sut.checkById(surveyId)
