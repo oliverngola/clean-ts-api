@@ -5,7 +5,6 @@ import {
   LoadAnswersBySurveyRepository,
   CheckSurveyByIdRepository
 } from '@/data/protocols'
-import { SurveyModel } from '@/domain/models'
 import { mockSurveyModel, mockSurveyModels } from '@/tests/domain/mocks'
 import faker from 'faker'
 
@@ -52,7 +51,7 @@ export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
   surveyModels = mockSurveyModels()
   accountId: string
 
-  async loadAll (accountId: string): Promise<SurveyModel[]> {
+  async loadAll (accountId: string): Promise<LoadSurveysRepository.Result> {
     this.accountId = accountId
     return Promise.resolve(this.surveyModels)
   }
