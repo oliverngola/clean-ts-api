@@ -104,5 +104,14 @@ describe('Surveys GraphQL', () => {
       expect(res.data.surveys[0].date).toBe(now.toISOString())
       expect(res.data.surveys[0].didAnswer).toBe(false)
     })
+
+    test('Should return AcessDeniedError if no acessToken is provided', async () => {
+      const { query } = createTestClient({
+        apolloServer
+      })
+      const res: any = await query(surveysQuery)
+      expect(res.data).toBeNull()
+      expect(res.errors[0].message).toBe('Access denied')
+    })
   })
 })
