@@ -15,7 +15,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 
 ## [**Link para a documentação da API**](https://clean-node-api-ongola.herokuapp.com/api-docs)
 
-> ## APIs construídas no treinamento
+>> ## APIs construídas no treinamento
 
 1. [Cadastro](./requirements/signup.md)
 2. [Login](./requirements/login.md)
@@ -49,6 +49,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * Abstract Server
 * Composition Root
 * Builder
+* Singleton
 
 > ## Metodologias e Designs
 
@@ -80,6 +81,9 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * Coveralls
 * Validator
 * Express
+* Apollo Server Express
+* Graphql
+* Graphql ISO Date
 * Supertest
 * Husky
 * Lint Staged
@@ -93,17 +97,31 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * Module-Alias
 * Copyfiles
 * Npm Check
+* Bson ObjectId
+* Apollo Server Integration Testing
 
 > ## Features do Node
 
 * Documentação de API com Swagger
+* API Rest com Express
+* GraphQL com Apollo Server
 * Log de Erro
 * Segurança (Hashing, Encryption e Encoding)
 * CORS
 * Middlewares
 * Nível de Acesso nas Rotas (Admin, User e Anônimo)
 * Deploy no Heroku
-* SErvir Arquivos Estáticos
+* Servir Arquivos Estáticos
+
+> ## Features do GraphQL
+
+* Types
+* Queries
+* Mutations
+* Resolvers
+* Directives
+* Scalars
+* Plugins
 
 > ## Features do Git
 
@@ -122,8 +140,10 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 * POO Avançado
 * Interface
 * TypeAlias
+* Namespace
 * Utility Types
 * Modularização de Paths
+* Configurações
 * Build
 * Deploy
 * Uso de Breakpoints
@@ -131,7 +151,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 > ## Features de Testes
 
 * Testes Unitários
-* Testes de Integração
+* Testes de Integração (API Rest & GraphQL)
 * Cobertura de Testes
 * Test Doubles
 * Mocks
