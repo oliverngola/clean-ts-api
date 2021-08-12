@@ -36,8 +36,8 @@ const makeSurvey = async (): Promise<SurveyModel> => {
     question: 'Question',
     answers: [
       {
-        image: 'http://image-name.com',
-        answer: 'Answer 1'
+        answer: 'Answer 1',
+        image: 'http://image-name.com'
       },
       {
         answer: 'Answer 2'
@@ -72,8 +72,10 @@ describe('SurveyResult GraphQL', () => {
           surveyId
           question
           answers {
-            image
             answer
+            count
+            percent
+            isCurrentAccountAnswer
           }
           date
         }
@@ -98,7 +100,32 @@ describe('SurveyResult GraphQL', () => {
       })
       expect(res.data.surveyResult.surveyId).toBe(survey.id.toString())
       expect(res.data.surveyResult.question).toBe(survey.question)
+      expect(res.data.surveyResult.answers).toEqual([{
+        answer: 'Answer 1',
+        count: 0,
+        percent: 0,
+        isCurrentAccountAnswer: false
+      }, {
+        answer: 'Answer 2',
+        count: 0,
+        percent: 0,
+        isCurrentAccountAnswer: false
+      }])
       expect(res.data.surveyResult.date).toBe(survey.date.toISOString())
+    })
+
+    test('Should return AccessDeniedError if no acessToken is provided', async () => {
+      const survey = await makeSurvey()
+      const { query } = createTestClient({
+        apolloServer
+      })
+      const res: any = await query(surveyResultQuery, {
+        variables: {
+          surveyId: survey.id.toString()
+        }
+      })
+      expect(res.data).toBeNull()
+      expect(res.errors[0].message).toBe('Access denied')
     })
   })
 })
