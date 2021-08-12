@@ -15,7 +15,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 
 ## [**Link para a documentação da API**](https://clean-node-api-ongola.herokuapp.com/api-docs)
 
->> ## APIs construídas no treinamento
+> ## APIs construídas no treinamento
 
 1. [Cadastro](./requirements/signup.md)
 2. [Login](./requirements/login.md)
