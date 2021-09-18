@@ -1,6 +1,6 @@
 import { mockAddAccountParams, mockAddSurveyParams } from '@/tests/domain/mocks'
 import { MongoHelper, SurveyMongoRepository } from '@/infra/db'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import FakeObjectId from 'bson-objectid'
 
 let surveyCollection: Collection
@@ -9,7 +9,7 @@ let accountCollection: Collection
 
 const makeAccountId = async (): Promise<string> => {
   const res = await accountCollection.insertOne(mockAddAccountParams())
-  return res.ops[0]._id
+  return res.insertedId.toHexString()
 }
 
 const makeSut = (): SurveyMongoRepository => {
@@ -26,11 +26,11 @@ describe('Survey Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
-    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    surveyResultCollection = MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.deleteMany({})
   })
 
@@ -48,10 +48,10 @@ describe('Survey Mongo Repository', () => {
       const accountId = await makeAccountId()
       const addSurveyModels = [mockAddSurveyParams(), mockAddSurveyParams()]
       const result = await surveyCollection.insertMany(addSurveyModels)
-      const survey = result.ops[0]
+      const survey = await surveyCollection.findOne({ _id: result.insertedIds[0] })
       await surveyResultCollection.insertOne({
         surveyId: survey._id,
-        accountId,
+        accountId: new ObjectId(accountId),
         answer: survey.answers[0].answer,
         date: new Date()
       })
@@ -77,7 +77,7 @@ describe('Survey Mongo Repository', () => {
     test('Should load survey by id on success', async () => {
       const sut = makeSut()
       const res = await surveyCollection.insertOne(mockAddSurveyParams())
-      const id = res.ops[0]._id
+      const id = res.insertedId.toHexString()
       const survey = await sut.loadById(id)
       expect(survey).toBeTruthy()
       expect(survey.id).toBeTruthy()
@@ -94,8 +94,8 @@ describe('Survey Mongo Repository', () => {
     test('Should load answers on success', async () => {
       const sut = makeSut()
       const res = await surveyCollection.insertOne(mockAddSurveyParams())
-      const survey = res.ops[0]
-      const answers = await sut.loadAnswers(survey._id)
+      const survey = await surveyCollection.findOne({ _id: res.insertedId })
+      const answers = await sut.loadAnswers(survey._id.toHexString())
       expect(answers).toEqual([
         survey.answers[0].answer,
         survey.answers[1].answer
@@ -113,7 +113,7 @@ describe('Survey Mongo Repository', () => {
     test('Should return true if survey exists', async () => {
       const sut = makeSut()
       const res = await surveyCollection.insertOne(mockAddSurveyParams())
-      const id = res.ops[0]._id
+      const id = res.insertedId.toHexString()
       const exists = await sut.checkById(id)
       expect(exists).toBe(true)
     })

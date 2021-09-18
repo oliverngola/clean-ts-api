@@ -19,10 +19,10 @@ const makeAccesssToken = async (): Promise<string> => {
     password: '123',
     role: 'admin'
   })
-  const id = res.ops[0]._id
+  const id = res.insertedId.toHexString()
   const accessToken = jwt.sign({ id }, env.jwtSecret)
   await accountCollection.updateOne({
-    _id: id
+    _id: res.insertedId
   }, {
     $set: {
       accessToken
@@ -45,7 +45,8 @@ const makeSurvey = async (): Promise<SurveyModel> => {
     ],
     date: new Date()
   })
-  return MongoHelper.map(res.ops[0])
+  const survey = await surveyCollection.findOne({ _id: res.insertedId })
+  return MongoHelper.map(survey)
 }
 
 describe('SurveyResult GraphQL', () => {
@@ -59,9 +60,9 @@ describe('SurveyResult GraphQL', () => {
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
