@@ -26,7 +26,7 @@ describe('Auth Routes', () => {
         .post('/api/signup')
         .send({
           name: 'Oliveira Ngola',
-          email: 'oliveiraernestongola123@gmail.com',
+          email: 'ongola123@gmail.com',
           password: '123',
           passwordConfirmation: '123'
         })
@@ -39,14 +39,14 @@ describe('Auth Routes', () => {
       const password = await hash('123', 12)
       await accountCollection.insertOne({
         name: 'Oliveira Ngola',
-        email: 'oliveiraernestongola123@gmail.com',
+        email: 'ongola123@gmail.com',
         password
       })
 
       await request(app)
         .post('/api/login')
         .send({
-          email: 'oliveiraernestongola123@gmail.com',
+          email: 'ongola123@gmail.com',
           password: '123'
         })
         .expect(200)
@@ -56,7 +56,7 @@ describe('Auth Routes', () => {
       await request(app)
         .post('/api/login')
         .send({
-          email: 'oliveiraernestongola123@gmail.com',
+          email: 'ongola123@gmail.com',
           password: '123'
         })
         .expect(401)

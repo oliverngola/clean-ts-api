@@ -11,7 +11,7 @@ let accountCollection: Collection
 const makeAccesssToken = async (): Promise<string> => {
   const res = await accountCollection.insertOne({
     name: 'Oliveira Ngola',
-    email: 'oliveiraernestongola123@gmail.com',
+    email: 'ongola123@gmail.com',
     password: '123',
     role: 'admin'
   })
