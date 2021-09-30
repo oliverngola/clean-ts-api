@@ -1,14 +1,16 @@
-import app from '@/main/config/app'
+import { setupApp } from '@/main/config/app'
 import { SurveyModel } from '@/domain/models'
 import { MongoHelper } from '@/infra/db'
 import env from '@/main/config/env'
 
+import { Express } from 'express'
 import { Collection } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 
 let accountCollection: Collection
 let surveyCollection: Collection
+let app: Express
 
 const makeAccesssToken = async (): Promise<string> => {
   const res = await accountCollection.insertOne({
@@ -49,6 +51,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
 
 describe('SurveyResult GraphQL', () => {
   beforeAll(async () => {
+    app = await setupApp()
     await MongoHelper.connect(process.env.MONGO_URL)
   })
 
